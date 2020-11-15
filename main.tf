@@ -50,8 +50,8 @@ locals {
 
 resource "aws_instance" "web" {
   ami  = data.aws_ami.latest_ubuntu.id
-  instance_type = local.web_instance_type_map[terraform.workspace]
-  count = local.web_instance_count_map[terraform.workspace]
+  instance_type = "t3.micro"
+  count = 2
   availability_zone = "us-west-2a"
   ebs_optimized=true
   monitoring=true
@@ -60,15 +60,3 @@ resource "aws_instance" "web" {
     Name = "TF_EC2"
   }
 }
-
-resource "aws_instance" "web2" {
-      for_each = local.web_instance_type_map
-
-      instance_type = each.value
-      ami  = data.aws_ami.latest_ubuntu.id
-      lifecycle {
-            create_before_destroy = true
-      }
-}
-
-
